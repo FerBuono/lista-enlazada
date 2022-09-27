@@ -25,7 +25,7 @@ type Lista[T any] interface {
 	// Largo devuelve la cantidad de elementos que hay en la lista. Si está vacía devuelve 0.
 	Largo() int
 
-	// Iterador devuelve un iterador de la lista.
+	// Iterador devuelve un iterador de la lista, el cual cuenta con sus primitivas.
 	Iterador() IteradorLista[T]
 }
 
