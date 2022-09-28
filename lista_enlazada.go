@@ -141,21 +141,15 @@ func (i *iterListaEnlazada[T]) Insertar(dato T) {
 	nuevo := i.lista.crearNodo(dato)
 	nuevo.prox = i.actual
 
-	if i.anterior == nil && i.actual == nil {
+	if i.anterior == nil {
 		i.lista.primero = nuevo
-		if i.actual.prox == nil {
-			i.lista.ultimo = i.actual
-		} else {
+		if i.actual == nil {
 			i.lista.ultimo = nuevo
 		}
 	} else {
-		if i.anterior == nil {
-			i.lista.primero = nuevo
-		} else if i.actual == nil {
+		i.anterior.prox = nuevo
+		if i.actual == nil {
 			i.lista.ultimo = nuevo
-			i.anterior.prox = nuevo
-		} else {
-			i.anterior.prox = nuevo
 		}
 	}
 	i.actual = nuevo
