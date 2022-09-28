@@ -130,11 +130,16 @@ func TestInsertarElementosConIterador(t *testing.T) {
 func TestBorrarElementosConIterador(t *testing.T) {
 	lista := TDALista.CrearListaEnlazada[int]()
 
+	iter := lista.Iterador()
+	require.False(t, iter.HaySiguiente())
+	require.PanicsWithValue(t, "El iterador termino de iterar", func() { iter.VerActual() })
+	require.PanicsWithValue(t, "El iterador termino de iterar", func() { iter.Siguiente() })
+
 	for i := 1; i < 10; i++ {
 		lista.InsertarUltimo(i)
 	}
 
-	iter := lista.Iterador()
+	iter = lista.Iterador()
 
 	primero := lista.VerPrimero()
 	require.Equal(t, primero, iter.Borrar())
@@ -161,6 +166,7 @@ func TestBorrarElementosConIterador(t *testing.T) {
 
 func TestIteradorInternoEnteros(t *testing.T) {
 	lista := TDALista.CrearListaEnlazada[int]()
+
 	suma := 0
 	for i := 0; i <= 10; i++ {
 		lista.InsertarUltimo(i)
@@ -172,9 +178,11 @@ func TestIteradorInternoEnteros(t *testing.T) {
 		return true
 	})
 	require.Equal(t, suma, suma_iterada)
+
 	suma_iterada = 0
 	lista.Iterar(func(dato int) bool {
 		suma_iterada += dato
 		return (suma_iterada <= 36)
 	})
+	require.Less(t, suma_iterada, suma)
 }

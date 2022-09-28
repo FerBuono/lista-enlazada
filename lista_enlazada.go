@@ -184,8 +184,7 @@ func CrearListaEnlazada[T any]() Lista[T] {
 }
 
 func (l *listaEnlazada[T]) Iterar(visitar func(T) bool) {
-	actual := new(nodoLista[T])
-	actual = l.primero
+	actual := l.primero
 	for visitar(actual.dato) && l.ultimo != actual {
 		actual = actual.prox
 	}
