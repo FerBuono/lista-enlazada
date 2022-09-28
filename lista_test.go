@@ -186,3 +186,13 @@ func TestIteradorInternoEnteros(t *testing.T) {
 	})
 	require.Less(t, suma_iterada, suma)
 }
+
+func TestIteradorInternoListaVacia(t *testing.T) {
+	lista := TDALista.CrearListaEnlazada[int]()
+	numero := 0
+	lista.Iterar(func(dato int) bool {
+		numero += dato
+		return true
+	})
+	require.Zero(t, numero)
+}
