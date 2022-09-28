@@ -107,7 +107,7 @@ func (l *listaEnlazada[T]) Iterador() IteradorLista[T] {
 
 func (l *listaEnlazada[T]) Iterar(visitar func(T) bool) {
 	actual := l.primero
-	for visitar(actual.dato) && l.ultimo != actual {
+	for l.primero != nil && visitar(actual.dato) && l.ultimo != actual {
 		actual = actual.prox
 	}
 }
@@ -158,22 +158,7 @@ func (i *iterListaEnlazada[T]) Insertar(dato T) {
 			i.anterior.prox = nuevo
 		}
 	}
-
 	i.actual = nuevo
-
-	/**if i.lista.EstaVacia() {
-		i.lista.primero = nuevo
-		i.lista.ultimo = nuevo
-	} else {
-		nuevo.prox = i.actual
-		if i.anterior == nil {
-			i.lista.primero = nuevo
-		}
-		if i.actual == nil {
-			i.lista.ultimo = nuevo
-			i.anterior.prox = nuevo
-		}
-	}**/
 
 	i.lista.largo++
 }
