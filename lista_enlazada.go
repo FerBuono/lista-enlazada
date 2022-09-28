@@ -17,6 +17,8 @@ type iterListaEnlazada[T any] struct {
 	anterior *nodoLista[T]
 }
 
+// Primitivas Lista
+
 func (l *listaEnlazada[T]) EstaVacia() bool {
 	return l.largo == 0 && l.primero == nil && l.ultimo == nil
 }
@@ -103,6 +105,15 @@ func (l *listaEnlazada[T]) Iterador() IteradorLista[T] {
 	return iter
 }
 
+func (l *listaEnlazada[T]) Iterar(visitar func(T) bool) {
+	actual := l.primero
+	for visitar(actual.dato) && l.ultimo != actual {
+		actual = actual.prox
+	}
+}
+
+// Primitivas IteradorLista
+
 func (i *iterListaEnlazada[T]) VerActual() T {
 	if !i.HaySiguiente() {
 		panic("El iterador termino de iterar")
@@ -128,8 +139,29 @@ func (i *iterListaEnlazada[T]) Siguiente() T {
 
 func (i *iterListaEnlazada[T]) Insertar(dato T) {
 	nuevo := i.lista.crearNodo(dato)
+	nuevo.prox = i.actual
 
-	if i.lista.EstaVacia() {
+	if i.anterior == nil && i.actual == nil {
+		i.lista.primero = nuevo
+		if i.actual.prox == nil {
+			i.lista.ultimo = i.actual
+		} else {
+			i.lista.ultimo = nuevo
+		}
+	} else {
+		if i.anterior == nil {
+			i.lista.primero = nuevo
+		} else if i.actual == nil {
+			i.lista.ultimo = nuevo
+			i.anterior.prox = nuevo
+		} else {
+			i.anterior.prox = nuevo
+		}
+	}
+
+	i.actual = nuevo
+
+	/**if i.lista.EstaVacia() {
 		i.lista.primero = nuevo
 		i.lista.ultimo = nuevo
 	} else {
@@ -141,8 +173,7 @@ func (i *iterListaEnlazada[T]) Insertar(dato T) {
 			i.lista.ultimo = nuevo
 			i.anterior.prox = nuevo
 		}
-	}
-	i.actual = nuevo
+	}**/
 
 	i.lista.largo++
 }
@@ -181,11 +212,4 @@ func (l *listaEnlazada[T]) crearNodo(dato T) *nodoLista[T] {
 func CrearListaEnlazada[T any]() Lista[T] {
 	l := new(listaEnlazada[T])
 	return l
-}
-
-func (l *listaEnlazada[T]) Iterar(visitar func(T) bool) {
-	actual := l.primero
-	for visitar(actual.dato) && l.ultimo != actual {
-		actual = actual.prox
-	}
 }
