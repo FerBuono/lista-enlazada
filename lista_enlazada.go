@@ -172,14 +172,6 @@ func (i *iterListaEnlazada[T]) Borrar() T {
 	return dato
 }
 
-func (l *listaEnlazada[T]) Iterar(visitar func(T) bool) {
-	actual := new(nodoLista[T])
-	actual = l.primero
-	for visitar(actual.dato) && l.ultimo != actual {
-		actual = actual.prox
-	}
-}
-
 func (l *listaEnlazada[T]) crearNodo(dato T) *nodoLista[T] {
 	nuevo := new(nodoLista[T])
 	nuevo.dato = dato
@@ -189,4 +181,12 @@ func (l *listaEnlazada[T]) crearNodo(dato T) *nodoLista[T] {
 func CrearListaEnlazada[T any]() Lista[T] {
 	l := new(listaEnlazada[T])
 	return l
+}
+
+func (l *listaEnlazada[T]) Iterar(visitar func(T) bool) {
+	actual := new(nodoLista[T])
+	actual = l.primero
+	for visitar(actual.dato) && l.ultimo != actual {
+		actual = actual.prox
+	}
 }

@@ -27,6 +27,10 @@ type Lista[T any] interface {
 
 	// Iterador devuelve un iterador de la lista, el cual cuenta con sus primitivas.
 	Iterador() IteradorLista[T]
+
+	// Iterar recibe una funcion que se va a aplicar los datos de la lista de manera ordenada, hasta que se acabe
+	// la lista o hasta que dicha funcion devuelva false
+	Iterar(func(T) bool)
 }
 
 type IteradorLista[T any] interface {

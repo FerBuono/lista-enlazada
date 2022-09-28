@@ -159,18 +159,22 @@ func TestBorrarElementosConIterador(t *testing.T) {
 	require.NotEqual(t, ultimo, lista.VerUltimo())
 }
 
-/*
-func TestIteradorInterno(t *testing.T) {
+func TestIteradorInternoEnteros(t *testing.T) {
 	lista := TDALista.CrearListaEnlazada[int]()
 	suma := 0
 	for i := 0; i <= 10; i++ {
 		lista.InsertarUltimo(i)
-		suma = +i
+		suma += i
 	}
-	require.Equal(t, suma, lista.Iterar(func(v int) bool {
-		fmt.Println(v)
+	suma_iterada := 0
+	lista.Iterar(func(dato int) bool {
+		suma_iterada += dato
 		return true
-	}))
-
+	})
+	require.Equal(t, suma, suma_iterada)
+	suma_iterada = 0
+	lista.Iterar(func(dato int) bool {
+		suma_iterada += dato
+		return (suma_iterada <= 36)
+	})
 }
-*/
