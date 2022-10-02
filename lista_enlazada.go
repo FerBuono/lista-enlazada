@@ -27,17 +27,11 @@ func (l *listaEnlazada[T]) InsertarPrimero(dato T) {
 	nuevo := l.crearNodo(dato)
 
 	if l.EstaVacia() {
-		l.primero = nuevo
 		l.ultimo = nuevo
 	} else {
 		nuevo.prox = l.primero
-		if l.primero.prox == nil {
-			l.primero = nuevo
-			l.ultimo = l.primero.prox
-		} else {
-			l.primero = nuevo
-		}
 	}
+	l.primero = nuevo
 
 	l.largo++
 }
@@ -48,11 +42,7 @@ func (l *listaEnlazada[T]) InsertarUltimo(dato T) {
 	if l.EstaVacia() {
 		l.primero = nuevo
 	} else {
-		if l.primero.prox == nil {
-			l.primero.prox = nuevo
-		} else {
-			l.ultimo.prox = nuevo
-		}
+		l.ultimo.prox = nuevo
 	}
 
 	l.ultimo = nuevo
@@ -107,7 +97,7 @@ func (l *listaEnlazada[T]) Iterador() IteradorLista[T] {
 
 func (l *listaEnlazada[T]) Iterar(visitar func(T) bool) {
 	actual := l.primero
-	for l.primero != nil && visitar(actual.dato) && l.ultimo != actual {
+	for actual != nil && visitar(actual.dato) {
 		actual = actual.prox
 	}
 }

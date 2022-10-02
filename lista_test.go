@@ -17,6 +17,33 @@ func TestListaVacia(t *testing.T) {
 	require.Equal(t, 0, lista.Largo())
 }
 
+func TestInsertarElementosInicio(t *testing.T) {
+	lista := TDALista.CrearListaEnlazada[int]()
+	lista.InsertarPrimero(1)
+	require.Equal(t, 1, lista.VerPrimero())
+	require.Equal(t, 1, lista.VerUltimo())
+	lista.InsertarPrimero(10)
+	require.Equal(t, 10, lista.VerPrimero())
+	require.NotEqual(t, 10, lista.VerUltimo())
+	lista.InsertarPrimero(20)
+	lista.InsertarPrimero(30)
+	require.Equal(t, 30, lista.VerPrimero())
+	require.Equal(t, 1, lista.VerUltimo())
+}
+
+func TestInsertarElementosFinal(t *testing.T) {
+	lista := TDALista.CrearListaEnlazada[int]()
+	lista.InsertarUltimo(1)
+	require.Equal(t, 1, lista.VerPrimero())
+	require.Equal(t, 1, lista.VerUltimo())
+	lista.InsertarUltimo(10)
+	require.Equal(t, 10, lista.VerUltimo())
+	require.NotEqual(t, 10, lista.VerPrimero())
+	lista.InsertarUltimo(20)
+	lista.InsertarUltimo(30)
+	require.Equal(t, 30, lista.VerUltimo())
+	require.Equal(t, 1, lista.VerPrimero())
+}
 func TestInsertarBorrarElementos(t *testing.T) {
 	lista := TDALista.CrearListaEnlazada[string]()
 
@@ -81,12 +108,14 @@ func TestVolumen(t *testing.T) {
 	for i := 0; i <= 1000; i++ {
 		lista.InsertarUltimo(i)
 		require.Equal(t, 0, lista.VerPrimero())
+		require.Equal(t, i, lista.VerUltimo())
 	}
 	require.Greater(t, lista.Largo(), 1000)
 	require.False(t, lista.EstaVacia())
 
 	for j := 0; j <= 1000; j++ {
 		require.Equal(t, j, lista.VerPrimero())
+		require.Equal(t, 1000, lista.VerUltimo())
 		require.Equal(t, j, lista.BorrarPrimero())
 	}
 	require.Equal(t, 0, lista.Largo())
@@ -163,26 +192,49 @@ func TestBorrarElementosConIterador(t *testing.T) {
 	require.Equal(t, ultimo, iter.Borrar())
 	require.NotEqual(t, ultimo, lista.VerUltimo())
 }
-
-func TestIteradorInternoEnteros(t *testing.T) {
+func TestFuncionalidadIterador(t *testing.T) {
 	lista := TDALista.CrearListaEnlazada[int]()
+	for i := 0; i < 10; i++ {
+		lista.InsertarPrimero(i)
+	}
+	datos_iterados := 0
+	lista.Iterar(func(dato int) bool {
+		datos_iterados++
+		return true
+	})
+	require.Equal(t, 10, datos_iterados)
+}
 
-	suma := 0
+func TestIteradorFinalizaAlFinalizarLaLista(t *testing.T) {
+	lista := TDALista.CrearListaEnlazada[int]()
 	for i := 0; i <= 10; i++ {
+		lista.InsertarUltimo(i)
+	}
+	suma_iterada := 0
+	lista.Iterar(func(dato int) bool {
+		require.Equal(t, dato, suma_iterada)
+		suma_iterada++
+		return true
+	})
+}
+
+func TestIteradorFinalizaAlIndicarUsuario(t *testing.T) {
+	lista := TDALista.CrearListaEnlazada[int]()
+	suma := 0
+	for i := 0; i < 20; i++ {
 		lista.InsertarUltimo(i)
 		suma += i
 	}
 	suma_iterada := 0
 	lista.Iterar(func(dato int) bool {
 		suma_iterada += dato
-		return true
+		return suma_iterada < 20
 	})
-	require.Equal(t, suma, suma_iterada)
-
-	suma_iterada = 0
+	require.Less(t, suma_iterada, suma)
+	suma_iterada = suma
 	lista.Iterar(func(dato int) bool {
-		suma_iterada += dato
-		return (suma_iterada <= 36)
+		suma_iterada = suma_iterada - (dato * 2)
+		return suma_iterada > 0
 	})
 	require.Less(t, suma_iterada, suma)
 }
@@ -195,4 +247,18 @@ func TestIteradorInternoListaVacia(t *testing.T) {
 		return true
 	})
 	require.Zero(t, numero)
+}
+
+func TestVolumenIterador(t *testing.T) {
+	lista := TDALista.CrearListaEnlazada[int]()
+	suma := 0
+	for i := 0; i < 2000; i++ {
+		suma += i
+		lista.InsertarUltimo(i)
+	}
+	suma_iterada := 0
+	lista.Iterar(func(dato int) bool {
+		suma_iterada += dato
+		return true
+	})
 }
