@@ -57,11 +57,9 @@ func (l *listaEnlazada[T]) BorrarPrimero() T {
 	primero := l.primero.dato
 
 	if l.primero.prox == nil {
-		l.primero = nil
 		l.ultimo = nil
-	} else {
-		l.primero = l.primero.prox
 	}
+	l.primero = l.primero.prox
 
 	l.largo--
 	return primero
