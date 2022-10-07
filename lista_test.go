@@ -192,7 +192,59 @@ func TestBorrarElementosConIterador(t *testing.T) {
 	require.Equal(t, ultimo, iter.Borrar())
 	require.NotEqual(t, ultimo, lista.VerUltimo())
 }
-func TestFuncionalidadIterador(t *testing.T) {
+func TestFuncionalidadIteradorExterno(t *testing.T) {
+	lista := TDALista.CrearListaEnlazada[int]()
+	iterador := lista.Iterador()
+	for i := 0; i <= 10; i++ {
+		iterador.Insertar(i)
+	}
+	for i := 10; i >= 0; i-- {
+		require.True(t, iterador.HaySiguiente())
+		require.Equal(t, i, iterador.Siguiente())
+	}
+	require.PanicsWithValue(t, "El iterador termino de iterar", func() { iterador.VerActual() })
+	require.PanicsWithValue(t, "El iterador termino de iterar", func() { iterador.Siguiente() })
+	iterador2 := lista.Iterador()
+	for i := 10; i >= 0; i-- {
+		require.True(t, iterador2.HaySiguiente())
+		require.Equal(t, i, iterador2.Borrar())
+	}
+	require.Equal(t, 0, lista.Largo())
+	for i := 0; i <= 10; i++ {
+		iterador2.Insertar(i)
+		if i == 5 {
+			iterador2.Insertar(30)
+		}
+	}
+	iterador3 := lista.Iterador()
+	for i := 10; i >= 0; i-- {
+		if i == 5 {
+			require.True(t, iterador3.HaySiguiente())
+			require.Equal(t, 30, iterador3.Borrar())
+		}
+		require.True(t, iterador3.HaySiguiente())
+		require.Equal(t, i, iterador3.Borrar())
+	}
+}
+
+func TestIteradorExtVolumen(t *testing.T) {
+	lista := TDALista.CrearListaEnlazada[int]()
+	iterador := lista.Iterador()
+	for i := 0; i <= 2000; i++ {
+		iterador.Insertar(i)
+	}
+	for i := 2000; i >= 0; i-- {
+		require.True(t, iterador.HaySiguiente())
+		require.Equal(t, i, iterador.Siguiente())
+	}
+	iterador2 := lista.Iterador()
+	for i := 2000; i >= 0; i-- {
+		require.True(t, iterador2.HaySiguiente())
+		require.Equal(t, i, iterador2.Borrar())
+	}
+	require.Equal(t, 0, lista.Largo())
+}
+func TestFuncionalidadIteradorInterno(t *testing.T) {
 	lista := TDALista.CrearListaEnlazada[int]()
 	for i := 0; i < 10; i++ {
 		lista.InsertarPrimero(i)
